@@ -1,15 +1,18 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, MapPin, Phone, Send, Github, Linkedin, Twitter, Instagram, Dribbble } from "lucide-react"
+import { Mail, MapPin, Phone, Send, Github, Linkedin, Twitter, Instagram, Dribbble, Loader2 } from "lucide-react"
+import { submitContactForm } from "@/lib/api"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function Contact() {
+  const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,19 +25,36 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Form submission logic would go here
-    console.log(formData)
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    })
-    // Show success message
-    alert("Message sent successfully!")
+
+    try {
+      setIsSubmitting(true)
+      await submitContactForm(formData)
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      })
+
+      // Show success message
+      toast({
+        title: "Message sent!",
+        description: "Thank you for your message. I'll get back to you soon.",
+      })
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again later.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -69,7 +89,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-medium">Email</h4>
-                <p className="text-muted-foreground">hello@janedoe.com</p>
+                <p className="text-muted-foreground">gaurang7717@gmail.com</p>
               </div>
             </div>
 
@@ -89,7 +109,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-medium">Location</h4>
-                <p className="text-muted-foreground">San Francisco, California</p>
+                <p className="text-muted-foreground">Ahmedabad, India</p>
               </div>
             </div>
           </div>
@@ -157,6 +177,7 @@ export default function Contact() {
                     onChange={handleChange}
                     placeholder="John Doe"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div className="space-y-2">
@@ -171,6 +192,7 @@ export default function Contact() {
                     onChange={handleChange}
                     placeholder="john@example.com"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -185,6 +207,7 @@ export default function Contact() {
                   onChange={handleChange}
                   placeholder="Project Inquiry"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               <div className="space-y-2">
@@ -199,10 +222,19 @@ export default function Contact() {
                   placeholder="Hello, I'd like to discuss a project..."
                   rows={5}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
-              <Button type="submit" className="w-full rounded-full">
-                <Send className="mr-2 h-4 w-4" /> Send Message
+              <Button type="submit" className="w-full rounded-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2 h-4 w-4" /> Send Message
+                  </>
+                )}
               </Button>
             </form>
           </div>

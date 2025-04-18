@@ -138,7 +138,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
         >
-          <span className="text-primary">Jane</span> Doe
+          <span className="text-primary">Gaurang</span> Dumaniya
         </motion.h1>
 
         <motion.div
@@ -149,7 +149,7 @@ export default function Hero() {
         >
           <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 blur opacity-70" />
           <div className="relative rounded-lg bg-background/80 backdrop-blur-sm px-6 py-4 border border-border/40">
-            <h2 className="text-xl md:text-2xl font-medium">UI/UX Designer & Creative Developer</h2>
+            <h2 className="text-xl md:text-2xl font-medium">UI/UX Designer </h2>
           </div>
         </motion.div>
 

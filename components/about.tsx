@@ -30,7 +30,7 @@ export default function About() {
           <div className="relative aspect-square overflow-hidden rounded-2xl border border-border/40 bg-background/80 backdrop-blur-sm">
             <Image
               src="/placeholder.svg?height=600&width=600"
-              alt="Jane Doe - UI/UX Designer"
+              alt="Gaurang Dumaniya - UI/UX Designer"
               width={600}
               height={600}
               className="object-cover w-full h-full"
@@ -44,10 +44,10 @@ export default function About() {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-2xl font-semibold mb-4">UI/UX Designer & Creative Developer</h3>
+          <h3 className="text-2xl font-semibold mb-4">UI/UX Designer </h3>
 
           <p className="text-muted-foreground mb-6">
-            Hello! I'm Jane, a passionate UI/UX designer with over 5 years of experience creating beautiful and
+            Hello! I'm Gaurang, a passionate UI/UX designer with over 1 years of experience creating beautiful and
             functional digital experiences. I specialize in user-centered design that balances aesthetics with
             usability.
           </p>
@@ -61,15 +61,15 @@ export default function About() {
           <div className="grid grid-cols-2 gap-4 mb-8">
             <div>
               <h4 className="font-medium mb-2">Name:</h4>
-              <p className="text-muted-foreground">Jane Doe</p>
+              <p className="text-muted-foreground">Gaurang Dumaniya</p>
             </div>
             <div>
               <h4 className="font-medium mb-2">Email:</h4>
-              <p className="text-muted-foreground">hello@janedoe.com</p>
+              <p className="text-muted-foreground">gaurang7717@gmail.com</p>
             </div>
             <div>
               <h4 className="font-medium mb-2">Location:</h4>
-              <p className="text-muted-foreground">San Francisco, CA</p>
+              <p className="text-muted-foreground">Ahmedabad, India</p>
             </div>
             <div>
               <h4 className="font-medium mb-2">Availability:</h4>
