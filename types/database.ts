@@ -28,3 +28,16 @@ export type Profile = {
   role: string
   updated_at: string
 }
+
+export type Experience = {
+  id: string
+  title: string
+  company: string
+  location: string
+  period: string
+  description: string[]
+  skills: string[]
+  created_at: string
+  updated_at: string
+  order: number
+}

@@ -11,6 +11,7 @@ import Projects from "@/components/projects"
 import Contact from "@/components/contact"
 import Footer from "@/components/footer"
 import { useTheme } from "next-themes"
+import Experience from "@/components/experience"
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -42,6 +43,17 @@ export default function Home() {
               className="py-20"
             >
               <About />
+            </motion.section>
+
+            <motion.section
+              id="experience"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="py-20"
+            >
+              <Experience />
             </motion.section>
 
             <motion.section

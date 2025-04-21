@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
 import ProtectedRoute from "@/components/protected-route"
 import { Toaster } from "@/components/ui/toaster"
-import { LayoutDashboard, FolderKanban, Mail, LogOut, Moon, Sun, Menu, X, User } from "lucide-react"
+import { LayoutDashboard, FolderKanban, Mail, LogOut, Moon, Sun, Menu, X, User, Briefcase } from "lucide-react"
 import { useTheme } from "next-themes"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -39,6 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navigation = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Projects", href: "/admin/projects", icon: FolderKanban },
+    { name: "Experiences", href: "/admin/experiences", icon: Briefcase },
     { name: "Messages", href: "/admin/messages", icon: Mail },
     { name: "Profile", href: "/admin/profile", icon: User },
   ]
