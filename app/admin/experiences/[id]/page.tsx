@@ -15,15 +15,14 @@ export default function EditExperiencePage() {
   const router = useRouter()
   const { toast } = useToast()
   const experienceId = params.id as string
+  const isNew = experienceId === "new"
 
   useEffect(() => {
-    // If the ID is "new", redirect to the dedicated new experience page
-    if (experienceId === "new") {
-      router.push("/admin/experiences/new")
-      return
-    }
-
     async function loadExperience() {
+      if (isNew) {
+        setIsLoading(false)
+        return
+      }
       try {
         setIsLoading(true)
         const data = await getExperienceById(experienceId)
@@ -40,13 +39,10 @@ export default function EditExperiencePage() {
       }
     }
 
-    if (experienceId && experienceId !== "new") {
-      loadExperience()
-    }
-  }, [experienceId, toast, router])
+    loadExperience()
+  }, [experienceId, toast, isNew])
 
-  // If we're redirecting to the new page, show a loading state
-  if (experienceId === "new") {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -54,10 +50,11 @@ export default function EditExperiencePage() {
     )
   }
 
-  if (isLoading) {
+  if (isNew) {
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div>
+        <h1 className="text-3xl font-bold mb-8">Add New Experience</h1>
+        <ExperienceForm />
       </div>
     )
   }

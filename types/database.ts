@@ -41,3 +41,13 @@ export type Experience = {
   updated_at: string
   order: number
 }
+
+export type Skill = {
+  id: string
+  name: string
+  icon: string
+  description: string
+  order: number
+  created_at: string
+  updated_at: string
+}

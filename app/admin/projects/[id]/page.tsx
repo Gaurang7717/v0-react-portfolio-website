@@ -17,17 +17,13 @@ export default function EditProjectPage() {
   const projectId = params.id as string
 
   useEffect(() => {
-    // If the ID is "new", redirect to the dedicated new project page
-    if (projectId === "new") {
-      router.push("/admin/projects/new")
-      return
-    }
-
     async function loadProject() {
       try {
         setIsLoading(true)
-        const data = await getProjectById(projectId)
-        setProject(data)
+        if (projectId !== "new") {
+          const data = await getProjectById(projectId)
+          setProject(data)
+        }
       } catch (error) {
         console.error("Failed to load project:", error)
         toast({
@@ -40,16 +36,16 @@ export default function EditProjectPage() {
       }
     }
 
-    if (projectId && projectId !== "new") {
-      loadProject()
-    }
-  }, [projectId, toast, router])
+    loadProject()
+  }, [projectId, toast])
 
-  // If we're redirecting to the new page, show a loading state
+  // Check if we're on the "new" route and handle it immediately
   if (projectId === "new") {
+    // Instead of redirecting, render the content directly
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div>
+        <h1 className="text-3xl font-bold mb-8">Create New Project</h1>
+        <ProjectForm />
       </div>
     )
   }

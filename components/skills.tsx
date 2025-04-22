@@ -1,61 +1,139 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Figma, Framer, Code2, PenTool, Layers, Palette, Lightbulb, Users, LineChart, Smartphone } from "lucide-react"
+import { getSkills } from "@/lib/api"
+import type { Skill } from "@/types/database"
+import * as LucideIcons from "lucide-react"
+import { Palette } from "lucide-react"
 
 export default function Skills() {
-  const skills = [
+  const [skills, setSkills] = useState<Skill[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Fallback skills data
+  const fallbackSkills = [
     {
+      id: "1",
       name: "UI Design",
-      icon: <Palette className="h-10 w-10" />,
+      icon: "Palette",
       description: "Creating beautiful and intuitive interfaces with attention to detail",
+      order: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "2",
       name: "UX Design",
-      icon: <Users className="h-10 w-10" />,
+      icon: "Users",
       description: "Crafting seamless user experiences based on research and testing",
+      order: 1,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "3",
       name: "Wireframing",
-      icon: <PenTool className="h-10 w-10" />,
+      icon: "PenTool",
       description: "Building the blueprint for successful digital products",
+      order: 2,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "4",
       name: "Prototyping",
-      icon: <Layers className="h-10 w-10" />,
+      icon: "Layers",
       description: "Creating interactive prototypes to test and validate ideas",
+      order: 3,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "5",
       name: "Figma",
-      icon: <Figma className="h-10 w-10" />,
+      icon: "Figma",
       description: "Expert in collaborative design and prototyping",
+      order: 4,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "6",
       name: "Framer",
-      icon: <Framer className="h-10 w-10" />,
+      icon: "Framer",
       description: "Building high-fidelity interactive prototypes",
+      order: 5,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "7",
       name: "Front-end",
-      icon: <Code2 className="h-10 w-10" />,
+      icon: "Code2",
       description: "Translating designs into responsive HTML, CSS and JavaScript",
+      order: 6,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "8",
       name: "Design Systems",
-      icon: <Lightbulb className="h-10 w-10" />,
+      icon: "Lightbulb",
       description: "Creating scalable and consistent design systems",
+      order: 7,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "9",
       name: "Analytics",
-      icon: <LineChart className="h-10 w-10" />,
+      icon: "LineChart",
       description: "Data-driven design decisions based on user behavior",
+      order: 8,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
     {
+      id: "10",
       name: "Responsive Design",
-      icon: <Smartphone className="h-10 w-10" />,
+      icon: "Smartphone",
       description: "Creating designs that work beautifully across all devices",
+      order: 9,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
   ]
+
+  useEffect(() => {
+    async function loadSkills() {
+      try {
+        setIsLoading(true)
+        const data = await getSkills()
+
+        // If we got data from the API, use it
+        if (data && data.length > 0) {
+          setSkills(data)
+        } else {
+          // Otherwise use fallback data
+          setSkills(fallbackSkills)
+        }
+      } catch (error) {
+        console.error("Failed to load skills:", error)
+        // Use fallback data if API fails
+        setSkills(fallbackSkills)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadSkills()
+  }, [])
+
+  const renderIcon = (iconName: string) => {
+    const Icon = LucideIcons[iconName]
+    return Icon ? <Icon className="h-10 w-10" /> : <Palette className="h-10 w-10" />
+  }
 
   return (
     <div className="container mx-auto">
@@ -72,7 +150,7 @@ export default function Skills() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {skills.map((skill, index) => (
           <motion.div
-            key={skill.name}
+            key={skill.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -86,7 +164,7 @@ export default function Skills() {
             <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/10 group-hover:via-secondary/10 group-hover:to-primary/10 blur opacity-0 group-hover:opacity-100 transition-all duration-500" />
             <div className="relative flex flex-col items-center">
               <div className="mb-4 text-primary transition-transform duration-300 group-hover:scale-110">
-                {skill.icon}
+                {renderIcon(skill.icon)}
               </div>
               <h3 className="text-lg font-semibold mb-2">{skill.name}</h3>
               <p className="text-sm text-muted-foreground">{skill.description}</p>

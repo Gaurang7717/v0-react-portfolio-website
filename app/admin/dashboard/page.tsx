@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, FolderKanban, Mail, Eye, Briefcase } from "lucide-react"
-import { getProjects, getContactSubmissions } from "@/lib/api"
+import { Loader2, FolderKanban, Mail, Eye, Briefcase, Palette } from "lucide-react"
+import { getProjects, getContactSubmissions, getSkills } from "@/lib/api"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
 
@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     totalProjects: 0,
     totalExperiences: 0,
+    totalSkills: 0,
     totalMessages: 0,
     unreadMessages: 0,
   })
@@ -22,8 +23,8 @@ export default function Dashboard() {
       try {
         setIsLoading(true)
 
-        // Load projects and messages
-        const [projects, messages] = await Promise.all([getProjects(), getContactSubmissions()])
+        // Load projects, messages, and skills
+        const [projects, messages, skills] = await Promise.all([getProjects(), getContactSubmissions(), getSkills()])
 
         // Try to load experiences, but handle the case when the table doesn't exist
         let experiences = []
@@ -38,6 +39,7 @@ export default function Dashboard() {
         setStats({
           totalProjects: projects.length,
           totalExperiences: experiences.length,
+          totalSkills: skills.length,
           totalMessages: messages.length,
           unreadMessages: messages.filter((msg) => !msg.read).length,
         })
@@ -68,7 +70,7 @@ export default function Dashboard() {
     <div>
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
@@ -88,6 +90,17 @@ export default function Dashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalExperiences}</div>
             <p className="text-xs text-muted-foreground">Work experiences in your portfolio</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Skills</CardTitle>
+            <Palette className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalSkills}</div>
+            <p className="text-xs text-muted-foreground">Skills in your portfolio</p>
           </CardContent>
         </Card>
 
@@ -141,13 +154,13 @@ export default function Dashboard() {
             </Card>
           </Link>
 
-          <Link href="/admin/messages">
+          <Link href="/admin/skills">
             <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
               <CardContent className="flex items-center p-6">
-                <Mail className="h-8 w-8 mr-4 text-primary" />
+                <Palette className="h-8 w-8 mr-4 text-primary" />
                 <div>
-                  <h3 className="font-medium">View Messages</h3>
-                  <p className="text-sm text-muted-foreground">Check and respond to contact submissions</p>
+                  <h3 className="font-medium">Manage Skills</h3>
+                  <p className="text-sm text-muted-foreground">Add, edit or remove skills</p>
                 </div>
               </CardContent>
             </Card>

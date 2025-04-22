@@ -1,5 +1,5 @@
 import { supabase } from "./supabase"
-import type { Project, ContactSubmission, Experience } from "@/types/database"
+import type { Project, ContactSubmission, Experience, Skill } from "@/types/database"
 
 // Projects API
 export async function getProjects() {
@@ -280,6 +280,107 @@ export async function reorderExperiences(orderedIds: string[]) {
     }
 
     console.error("Error reordering experiences:", error)
+    throw error
+  }
+}
+
+// Skills API
+export async function getSkills() {
+  try {
+    // Try to order by the 'order' column
+    const { data, error } = await supabase.from("skills").select("*").order("order", { ascending: true })
+
+    if (error) {
+      throw error
+    }
+
+    return data as Skill[]
+  } catch (error) {
+    // If the 'order' column doesn't exist or the table doesn't exist, handle gracefully
+    if (
+      error.message &&
+      (error.message.includes("column skills.order does not exist") ||
+        error.message.includes('relation "skills" does not exist'))
+    ) {
+      console.error("Skills table or order column does not exist:", error)
+      return [] as Skill[]
+    }
+
+    console.error("Error fetching skills:", error)
+    throw error
+  }
+}
+
+export async function getSkillById(id: string) {
+  // Validate that the ID is a valid UUID format
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (!uuidRegex.test(id)) {
+    throw new Error(`Invalid skill ID format: ${id}`)
+  }
+
+  const { data, error } = await supabase.from("skills").select("*").eq("id", id).single()
+
+  if (error) {
+    console.error(`Error fetching skill with id ${id}:`, error)
+    throw error
+  }
+
+  return data as Skill
+}
+
+export async function createSkill(skill: Omit<Skill, "id" | "created_at" | "updated_at">) {
+  const { data, error } = await supabase.from("skills").insert([skill]).select()
+
+  if (error) {
+    console.error("Error creating skill:", error)
+    throw error
+  }
+
+  return data[0] as Skill
+}
+
+export async function updateSkill(id: string, skill: Partial<Omit<Skill, "id" | "created_at" | "updated_at">>) {
+  const { data, error } = await supabase
+    .from("skills")
+    .update({ ...skill, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+
+  if (error) {
+    console.error(`Error updating skill with id ${id}:`, error)
+    throw error
+  }
+
+  return data[0] as Skill
+}
+
+export async function deleteSkill(id: string) {
+  const { error } = await supabase.from("skills").delete().eq("id", id)
+
+  if (error) {
+    console.error(`Error deleting skill with id ${id}:`, error)
+    throw error
+  }
+
+  return true
+}
+
+export async function reorderSkills(orderedIds: string[]) {
+  try {
+    const updates = orderedIds.map((id, index) => ({
+      id,
+      order: index,
+    }))
+
+    const { error } = await supabase.from("skills").upsert(updates)
+
+    if (error) {
+      throw error
+    }
+
+    return true
+  } catch (error) {
+    console.error("Error reordering skills:", error)
     throw error
   }
 }
