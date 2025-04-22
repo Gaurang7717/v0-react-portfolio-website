@@ -14,6 +14,12 @@ export async function getProjects() {
 }
 
 export async function getProjectById(id: string) {
+  // Validate that the ID is a valid UUID format
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (!uuidRegex.test(id)) {
+    throw new Error(`Invalid project ID format: ${id}`)
+  }
+
   const { data, error } = await supabase.from("projects").select("*").eq("id", id).single()
 
   if (error) {

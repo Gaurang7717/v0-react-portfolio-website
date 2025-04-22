@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import ProjectForm from "@/components/project-form"
 import { getProjectById } from "@/lib/api"
@@ -12,10 +12,17 @@ export default function EditProjectPage() {
   const [project, setProject] = useState<Project | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const params = useParams()
+  const router = useRouter()
   const { toast } = useToast()
   const projectId = params.id as string
 
   useEffect(() => {
+    // If the ID is "new", redirect to the dedicated new project page
+    if (projectId === "new") {
+      router.push("/admin/projects/new")
+      return
+    }
+
     async function loadProject() {
       try {
         setIsLoading(true)
@@ -33,10 +40,19 @@ export default function EditProjectPage() {
       }
     }
 
-    if (projectId) {
+    if (projectId && projectId !== "new") {
       loadProject()
     }
-  }, [projectId, toast])
+  }, [projectId, toast, router])
+
+  // If we're redirecting to the new page, show a loading state
+  if (projectId === "new") {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (
