@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, MapPin, Phone, Send, Github, Linkedin, Twitter, Instagram, Dribbble, Loader2 } from "lucide-react"
-import { submitContactForm } from "@/lib/api"
 import { useToast } from "@/components/ui/use-toast"
 
 export default function Contact() {
@@ -30,7 +29,23 @@ export default function Contact() {
 
     try {
       setIsSubmitting(true)
-      await submitContactForm(formData)
+
+      // Create a FormData object to submit
+      const formDataObj = new FormData()
+      formDataObj.append("name", formData.name)
+      formDataObj.append("email", formData.email)
+      formDataObj.append("subject", formData.subject)
+      formDataObj.append("message", formData.message)
+
+      // Submit the form using fetch to a server action endpoint
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: formDataObj,
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit contact form")
+      }
 
       // Reset form
       setFormData({

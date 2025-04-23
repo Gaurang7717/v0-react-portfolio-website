@@ -1,4 +1,4 @@
-import { supabase } from "./supabase"
+import { supabase, getServerClient } from "./supabase"
 import type { Project, ContactSubmission, Experience, Skill } from "@/types/database"
 
 // Projects API
@@ -69,7 +69,13 @@ export async function deleteProject(id: string) {
 
 // Contact Submissions API
 export async function submitContactForm(submission: Omit<ContactSubmission, "id" | "read" | "created_at">) {
-  const { data, error } = await supabase.from("contact_submissions").insert([submission]).select()
+  // Use server client to bypass RLS
+  const serverClient = getServerClient()
+
+  const { data, error } = await serverClient
+    .from("contact_submissions")
+    .insert([{ ...submission, read: false }])
+    .select()
 
   if (error) {
     console.error("Error submitting contact form:", error)
@@ -296,26 +302,21 @@ export async function getSkills() {
 
     return data as Skill[]
   } catch (error) {
-    // If the 'order' column doesn't exist or the table doesn't exist, handle gracefully
-    if (
-      error.message &&
-      (error.message.includes("column skills.order does not exist") ||
-        error.message.includes('relation "skills" does not exist'))
-    ) {
-      console.error("Skills table or order column does not exist:", error)
-      return [] as Skill[]
-    }
-
+    // If there's an error, log it and return an empty array
     console.error("Error fetching skills:", error)
-    throw error
+    return [] as Skill[]
   }
 }
 
 export async function getSkillById(id: string) {
   // Validate that the ID is a valid UUID format
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-  if (!uuidRegex.test(id)) {
+  if (!uuidRegex.test(id) && id !== "new") {
     throw new Error(`Invalid skill ID format: ${id}`)
+  }
+
+  if (id === "new") {
+    return null
   }
 
   const { data, error } = await supabase.from("skills").select("*").eq("id", id).single()
