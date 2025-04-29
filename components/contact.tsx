@@ -37,7 +37,7 @@ export default function Contact() {
       formDataObj.append("subject", formData.subject)
       formDataObj.append("message", formData.message)
 
-      // Submit the form using fetch to a server action endpoint
+      // Submit the form using fetch to the server action endpoint
       const response = await fetch("/api/contact", {
         method: "POST",
         body: formDataObj,
