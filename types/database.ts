@@ -51,3 +51,28 @@ export type Skill = {
   created_at: string
   updated_at: string
 }
+
+export type Analytics = {
+  id: string
+  page_path: string
+  visitor_id: string
+  device_type: string
+  browser: string | null
+  country: string | null
+  referrer: string | null
+  timestamp: string
+}
+
+export type AnalyticsSummary = {
+  totalVisitors: number
+  uniqueVisitors: number
+  mobileVisitors: number
+  desktopVisitors: number
+  tabletVisitors: number
+  pageViews: Record<string, number>
+  dailyVisitors: { date: string; count: number }[]
+  weeklyVisitors: { week: string; count: number }[]
+  monthlyVisitors: { month: string; count: number }[]
+}
+
+export type TimeRange = "day" | "week" | "month" | "year" | "all"
