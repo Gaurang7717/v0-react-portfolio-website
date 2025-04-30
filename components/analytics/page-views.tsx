@@ -1,8 +1,8 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts"
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
 import type { AnalyticsSummary } from "@/types/database"
 
 interface PageViewsProps {
@@ -18,6 +18,22 @@ export default function PageViews({ data }: PageViewsProps) {
     }))
     .sort((a, b) => b.views - a.views)
     .slice(0, 5) // Top 5 pages
+
+  // If there's no data, show a message
+  if (chartData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Top Pages</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[200px] flex items-center justify-center">
+            <p className="text-muted-foreground">No page view data available</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card>
@@ -39,8 +55,8 @@ export default function PageViews({ data }: PageViewsProps) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
                 <YAxis dataKey="name" type="category" width={80} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="views" fill="var(--color-views)" barSize={20} />
+                <Tooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="views" fill="hsl(var(--primary))" barSize={20} />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>

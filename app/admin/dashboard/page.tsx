@@ -57,8 +57,24 @@ export default function Dashboard() {
         })
 
         // Load analytics data
-        const analytics = await getAnalyticsSummary(timeRange)
-        setAnalyticsData(analytics)
+        try {
+          const analytics = await getAnalyticsSummary(timeRange)
+          setAnalyticsData(analytics)
+        } catch (error) {
+          console.error("Failed to load analytics data:", error)
+          // Set default empty analytics data
+          setAnalyticsData({
+            totalVisitors: 0,
+            uniqueVisitors: 0,
+            mobileVisitors: 0,
+            desktopVisitors: 0,
+            tabletVisitors: 0,
+            pageViews: {},
+            dailyVisitors: [],
+            weeklyVisitors: [],
+            monthlyVisitors: [],
+          })
+        }
       } catch (error) {
         console.error("Failed to load dashboard stats:", error)
         toast({
@@ -111,6 +127,21 @@ export default function Dashboard() {
     )
   }
 
+  // Create a default empty analytics data object if analyticsData is null
+  const emptyAnalyticsData: AnalyticsSummary = {
+    totalVisitors: 0,
+    uniqueVisitors: 0,
+    mobileVisitors: 0,
+    desktopVisitors: 0,
+    tabletVisitors: 0,
+    pageViews: {},
+    dailyVisitors: [],
+    weeklyVisitors: [],
+    monthlyVisitors: [],
+  }
+
+  const displayData = analyticsData || emptyAnalyticsData
+
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -148,68 +179,28 @@ export default function Dashboard() {
           <LiveVisitors />
 
           <VisitorStats
-            data={
-              analyticsData || {
-                totalVisitors: 0,
-                uniqueVisitors: 0,
-                mobileVisitors: 0,
-                desktopVisitors: 0,
-                tabletVisitors: 0,
-                pageViews: {},
-                dailyVisitors: [],
-                weeklyVisitors: [],
-                monthlyVisitors: [],
-              }
-            }
+            data={displayData}
             title="Total Visitors"
             icon={<Eye className="h-4 w-4 text-muted-foreground" />}
           />
 
           <VisitorStats
-            data={
-              analyticsData || {
-                totalVisitors: 0,
-                uniqueVisitors: 0,
-                mobileVisitors: 0,
-                desktopVisitors: 0,
-                tabletVisitors: 0,
-                pageViews: {},
-                dailyVisitors: [],
-                weeklyVisitors: [],
-                monthlyVisitors: [],
-              }
-            }
+            data={displayData}
             title="Unique Visitors"
             icon={<Users className="h-4 w-4 text-muted-foreground" />}
           />
 
           <VisitorStats
-            data={
-              analyticsData || {
-                totalVisitors: 0,
-                uniqueVisitors: 0,
-                mobileVisitors: 0,
-                desktopVisitors: 0,
-                tabletVisitors: 0,
-                pageViews: {},
-                dailyVisitors: [],
-                weeklyVisitors: [],
-                monthlyVisitors: [],
-              }
-            }
+            data={displayData}
             title="Mobile Visitors"
             icon={<Smartphone className="h-4 w-4 text-muted-foreground" />}
           />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-          {analyticsData && (
-            <>
-              <VisitorChart data={analyticsData} />
-              <DeviceBreakdown data={analyticsData} />
-              <PageViews data={analyticsData} />
-            </>
-          )}
+          <VisitorChart data={displayData} />
+          <DeviceBreakdown data={displayData} />
+          <PageViews data={displayData} />
         </div>
       </div>
 

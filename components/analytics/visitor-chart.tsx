@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, Tooltip } from "recharts"
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
 import type { AnalyticsSummary } from "@/types/database"
 
 interface VisitorChartProps {
@@ -37,6 +37,29 @@ export default function VisitorChart({ data }: VisitorChartProps) {
             }
           })
 
+  // If there's no data, show a message
+  if (chartData.length === 0) {
+    return (
+      <Card className="col-span-3">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle>Visitor Traffic</CardTitle>
+          <Tabs defaultValue="daily" value={view} onValueChange={(v) => setView(v as any)}>
+            <TabsList>
+              <TabsTrigger value="daily">Daily</TabsTrigger>
+              <TabsTrigger value="weekly">Weekly</TabsTrigger>
+              <TabsTrigger value="monthly">Monthly</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <div className="h-[300px] flex items-center justify-center">
+            <p className="text-muted-foreground">No visitor data available for this time period</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="col-span-3">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -64,11 +87,11 @@ export default function VisitorChart({ data }: VisitorChartProps) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <Tooltip content={<ChartTooltipContent />} />
                 <Line
                   type="monotone"
                   dataKey="visitors"
-                  stroke="var(--color-visitors)"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={2}
                   activeDot={{ r: 8 }}
                 />

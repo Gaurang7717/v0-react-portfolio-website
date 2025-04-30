@@ -18,6 +18,24 @@ export default function DeviceBreakdown({ data }: DeviceBreakdownProps) {
 
   const COLORS = ["hsl(var(--primary))", "hsl(var(--secondary))", "hsl(var(--accent))"]
 
+  const totalVisitors = data.desktopVisitors + data.mobileVisitors + data.tabletVisitors
+
+  // If there's no data, show a message
+  if (totalVisitors === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Device Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[200px] flex items-center justify-center">
+            <p className="text-muted-foreground">No device data available</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -43,11 +61,7 @@ export default function DeviceBreakdown({ data }: DeviceBreakdownProps) {
                           <span className="ml-2 font-semibold">{data.name}</span>
                         </div>
                         <div className="mt-1 text-sm">
-                          {data.value} visitors (
-                          {Math.round(
-                            (data.value / (data.desktopVisitors + data.mobileVisitors + data.tabletVisitors)) * 100,
-                          )}
-                          %)
+                          {data.value} visitors ({Math.round((data.value / totalVisitors) * 100)}%)
                         </div>
                       </div>
                     )

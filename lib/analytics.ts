@@ -5,6 +5,11 @@ import { v4 as uuidv4 } from "uuid"
 // Function to track a page view
 export async function trackPageView(pagePath: string) {
   try {
+    // Check if we're in a browser environment
+    if (typeof window === "undefined") {
+      return false
+    }
+
     // Get or create visitor ID from localStorage
     let visitorId = localStorage.getItem("visitor_id")
     if (!visitorId) {

@@ -12,6 +12,32 @@ interface VisitorStatsProps {
 }
 
 export default function VisitorStats({ data, title, icon }: VisitorStatsProps) {
+  // Determine which stat to display based on the title
+  let statValue = 0
+  let description = ""
+
+  switch (title) {
+    case "Total Visitors":
+      statValue = data.totalVisitors
+      description = "Page views"
+      break
+    case "Unique Visitors":
+      statValue = data.uniqueVisitors
+      description = "Distinct users"
+      break
+    case "Mobile Visitors":
+      statValue = data.mobileVisitors
+      description = "From mobile devices"
+      break
+    case "Desktop Visitors":
+      statValue = data.desktopVisitors
+      description = "From desktop devices"
+      break
+    default:
+      statValue = 0
+      description = ""
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -19,24 +45,8 @@ export default function VisitorStats({ data, title, icon }: VisitorStatsProps) {
         {icon}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">
-          {title === "Total Visitors"
-            ? data.totalVisitors
-            : title === "Unique Visitors"
-              ? data.uniqueVisitors
-              : title === "Mobile Visitors"
-                ? data.mobileVisitors
-                : data.desktopVisitors}
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {title === "Total Visitors"
-            ? "Page views"
-            : title === "Unique Visitors"
-              ? "Distinct users"
-              : title === "Mobile Visitors"
-                ? "From mobile devices"
-                : "From desktop devices"}
-        </p>
+        <div className="text-2xl font-bold">{statValue}</div>
+        <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
   )

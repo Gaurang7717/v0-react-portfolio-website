@@ -11,8 +11,13 @@ export default function AnalyticsTracker() {
   useEffect(() => {
     // Only track if the path has changed
     if (pathname !== lastPathRef.current) {
-      trackPageView(pathname)
-      lastPathRef.current = pathname
+      try {
+        trackPageView(pathname)
+        lastPathRef.current = pathname
+      } catch (error) {
+        console.error("Error tracking page view:", error)
+        // Don't update lastPathRef so we can try again on the next render
+      }
     }
   }, [pathname])
 
