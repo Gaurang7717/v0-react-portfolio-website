@@ -30,63 +30,83 @@ export default function Dashboard() {
   const [isSeeding, setIsSeeding] = useState(false)
   const { toast } = useToast()
 
-  useEffect(() => {
-    async function loadStats() {
+  // Update the loadStats function to handle errors better
+  async function loadStats() {
+    try {
+      setIsLoading(true)
+
+      // Load projects, messages, and skills
+      let projects = []
+      let messages = []
+      let skills = []
+      let experiences = []
+      let analyticsData = null
+
       try {
-        setIsLoading(true)
-
-        // Load projects, messages, and skills
-        const [projects, messages, skills] = await Promise.all([getProjects(), getContactSubmissions(), getSkills()])
-
-        // Try to load experiences, but handle the case when the table doesn't exist
-        let experiences = []
-        try {
-          const { getExperiences } = await import("@/lib/api")
-          experiences = await getExperiences()
-        } catch (error) {
-          console.error("Failed to load experiences:", error)
-          // Experiences table might not exist yet
-        }
-
-        setStats({
-          totalProjects: projects.length,
-          totalExperiences: experiences.length,
-          totalSkills: skills.length,
-          totalMessages: messages.length,
-          unreadMessages: messages.filter((msg) => !msg.read).length,
-        })
-
-        // Load analytics data
-        try {
-          const analytics = await getAnalyticsSummary(timeRange)
-          setAnalyticsData(analytics)
-        } catch (error) {
-          console.error("Failed to load analytics data:", error)
-          // Set default empty analytics data
-          setAnalyticsData({
-            totalVisitors: 0,
-            uniqueVisitors: 0,
-            mobileVisitors: 0,
-            desktopVisitors: 0,
-            tabletVisitors: 0,
-            pageViews: {},
-            dailyVisitors: [],
-            weeklyVisitors: [],
-            monthlyVisitors: [],
-          })
-        }
+        ;[projects, messages, skills] = await Promise.all([getProjects(), getContactSubmissions(), getSkills()])
       } catch (error) {
-        console.error("Failed to load dashboard stats:", error)
+        console.error("Failed to load basic stats:", error)
         toast({
-          title: "Error",
-          description: "Failed to load dashboard statistics. Please try again later.",
+          title: "Warning",
+          description: "Some data could not be loaded. You may see partial information.",
           variant: "destructive",
         })
-      } finally {
-        setIsLoading(false)
+        // Set default empty arrays
+        projects = []
+        messages = []
+        skills = []
       }
-    }
 
+      // Try to load experiences, but handle the case when the table doesn't exist
+      try {
+        const { getExperiences } = await import("@/lib/api")
+        experiences = await getExperiences()
+      } catch (error) {
+        console.error("Failed to load experiences:", error)
+        // Experiences table might not exist yet
+        experiences = []
+      }
+
+      setStats({
+        totalProjects: projects.length,
+        totalExperiences: experiences.length,
+        totalSkills: skills.length,
+        totalMessages: messages.length,
+        unreadMessages: messages.filter((msg) => !msg.read).length,
+      })
+
+      // Load analytics data
+      try {
+        analyticsData = await getAnalyticsSummary(timeRange)
+        setAnalyticsData(analyticsData)
+      } catch (error) {
+        console.error("Failed to load analytics data:", error)
+        // Set default empty analytics data
+        setAnalyticsData({
+          totalVisitors: 0,
+          uniqueVisitors: 0,
+          mobileVisitors: 0,
+          desktopVisitors: 0,
+          tabletVisitors: 0,
+          pageViews: {},
+          dailyVisitors: [],
+          weeklyVisitors: [],
+          monthlyVisitors: [],
+        })
+      }
+    } catch (error) {
+      console.error("Failed to load dashboard stats:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load dashboard statistics. Please try again later.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
     loadStats()
   }, [toast, timeRange])
 

@@ -25,7 +25,9 @@ export default function ExperienceForm({ experience, isEditing = false }: Experi
     title: experience?.title || "",
     company: experience?.company || "",
     location: experience?.location || "",
-    period: experience?.period || "",
+    start_date: experience?.start_date || "",
+    end_date: experience?.end_date || "",
+    is_current: experience?.is_current || false,
     description: experience?.description || [""],
     skills: experience?.skills || [],
     order: experience?.order ?? 0,
@@ -37,6 +39,15 @@ export default function ExperienceForm({ experience, isEditing = false }: Experi
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target
+    setFormData((prev) => ({ ...prev, [name]: checked }))
+  }
+
+  const handleDateChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
@@ -85,20 +96,39 @@ export default function ExperienceForm({ experience, isEditing = false }: Experi
     })
   }
 
+  const formatDateForDisplay = (dateString: string) => {
+    if (!dateString) return ""
+
+    try {
+      const date = new Date(dateString)
+      return date.toISOString().split("T")[0]
+    } catch (error) {
+      return dateString
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     try {
       setIsSubmitting(true)
 
+      // Format the period based on start_date, end_date, and is_current
+      const formattedData = {
+        ...formData,
+        period: formData.is_current
+          ? `${formatDateForDisplay(formData.start_date)} - Present`
+          : `${formatDateForDisplay(formData.start_date)} - ${formatDateForDisplay(formData.end_date)}`,
+      }
+
       if (isEditing && experience) {
-        await updateExperience(experience.id, formData)
+        await updateExperience(experience.id, formattedData)
         toast({
           title: "Success",
           description: "Experience updated successfully.",
         })
       } else {
-        await createExperience(formData)
+        await createExperience(formattedData)
         toast({
           title: "Success",
           description: "Experience created successfully.",
@@ -129,7 +159,7 @@ export default function ExperienceForm({ experience, isEditing = false }: Experi
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="Senior UI/UX Designer"
+              placeholder="UI/UX Designer"
               required
               disabled={isSubmitting}
             />
@@ -163,17 +193,51 @@ export default function ExperienceForm({ experience, isEditing = false }: Experi
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="period">Period</Label>
-            <Input
-              id="period"
-              name="period"
-              value={formData.period}
-              onChange={handleChange}
-              placeholder="Jan 2023 - Present"
-              required
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="start_date">Start Date</Label>
+              <div className="flex items-center">
+                <Input
+                  id="start_date"
+                  name="start_date"
+                  type="date"
+                  value={formData.start_date}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="end_date">End Date</Label>
+              <div className="flex items-center">
+                <Input
+                  id="end_date"
+                  name="end_date"
+                  type="date"
+                  value={formData.end_date}
+                  onChange={handleChange}
+                  required={!formData.is_current}
+                  disabled={isSubmitting || formData.is_current}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="is_current"
+              name="is_current"
+              checked={formData.is_current}
+              onChange={handleCheckboxChange}
               disabled={isSubmitting}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
             />
+            <Label htmlFor="is_current">I currently work here</Label>
           </div>
 
           <div className="space-y-2">

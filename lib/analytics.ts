@@ -49,9 +49,27 @@ export async function trackPageView(pagePath: string) {
 // Function to get analytics summary
 export async function getAnalyticsSummary(timeRange: TimeRange = "all"): Promise<AnalyticsSummary> {
   try {
-    // Get server client to ensure we have proper permissions
-    const serverClient = getServerClient()
+    // Try to get server client, but handle the case when environment variables are missing
+    let serverClient
+    try {
+      serverClient = getServerClient()
+    } catch (error) {
+      console.error("Error initializing Supabase server client:", error)
+      // Return default empty data when server client can't be initialized
+      return {
+        totalVisitors: 0,
+        uniqueVisitors: 0,
+        mobileVisitors: 0,
+        desktopVisitors: 0,
+        tabletVisitors: 0,
+        pageViews: {},
+        dailyVisitors: [],
+        weeklyVisitors: [],
+        monthlyVisitors: [],
+      }
+    }
 
+    // Rest of the function remains the same...
     // Calculate date range based on timeRange
     const now = new Date()
     let startDate: Date | null = null
@@ -214,7 +232,14 @@ function getWeekNumber(date: Date): number {
 // Function to get live visitor count (last 5 minutes)
 export async function getLiveVisitorCount(): Promise<number> {
   try {
-    const serverClient = getServerClient()
+    // Try to get server client, but handle the case when environment variables are missing
+    let serverClient
+    try {
+      serverClient = getServerClient()
+    } catch (error) {
+      console.error("Error initializing Supabase server client:", error)
+      return 0
+    }
 
     // Calculate 5 minutes ago
     const fiveMinutesAgo = new Date()
@@ -242,7 +267,14 @@ export async function getLiveVisitorCount(): Promise<number> {
 // Function to seed analytics data for testing
 export async function seedAnalyticsData(days = 30): Promise<boolean> {
   try {
-    const serverClient = getServerClient()
+    // Try to get server client, but handle the case when environment variables are missing
+    let serverClient
+    try {
+      serverClient = getServerClient()
+    } catch (error) {
+      console.error("Error initializing Supabase server client:", error)
+      return false
+    }
 
     // Generate random visitor IDs
     const visitorIds = Array.from({ length: 50 }, () => uuidv4())

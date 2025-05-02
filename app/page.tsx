@@ -1,15 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import Navbar from "@/components/navbar"
 import Hero from "@/components/hero"
 import About from "@/components/about"
-import Skills from "@/components/skills"
 import Projects from "@/components/projects"
 import Contact from "@/components/contact"
 import Footer from "@/components/footer"
-import Experience from "@/components/experience"
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -22,71 +18,28 @@ export default function Home() {
   if (!mounted) return null
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted transition-colors duration-500">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Navbar />
-        <main>
-          <section id="home" className="py-10">
-            <Hero />
-          </section>
+    <div className="min-h-screen bg-[#f5f5f3] dark:bg-[#121212] transition-colors duration-500">
+      <main>
+        <section id="home">
+          <Hero />
+        </section>
 
-          <motion.section
-            id="about"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="py-20"
-          >
-            <About />
-          </motion.section>
+        <section id="about">
+          <About />
+        </section>
 
-          <motion.section
-            id="experience"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="py-20"
-          >
-            <Experience />
-          </motion.section>
+        <section id="projects">
+          <Projects />
+        </section>
 
-          <motion.section
-            id="skills"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="py-20"
-          >
-            <Skills />
-          </motion.section>
-
-          <motion.section
-            id="projects"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="py-20"
-          >
-            <Projects />
-          </motion.section>
-
-          <motion.section
-            id="contact"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="py-20"
-          >
+        <section id="contact" className="bg-[#f5f5f3] dark:bg-[#121212] py-24">
+          <div className="container mx-auto px-4 md:px-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-16">GET IN TOUCH</h2>
             <Contact />
-          </motion.section>
-        </main>
-        <Footer />
-      </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
     </div>
   )
 }

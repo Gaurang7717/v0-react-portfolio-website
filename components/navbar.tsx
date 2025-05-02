@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Moon, Sun, Menu, X } from "lucide-react"
+import { Moon, Sun, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 
@@ -19,8 +19,6 @@ export default function Navbar() {
   const navItems = [
     { name: "Home", href: "#home" },
     { name: "About", href: "#about" },
-    { name: "Experience", href: "#experience" },
-    { name: "Skills", href: "#skills" },
     { name: "Projects", href: "#projects" },
     { name: "Contact", href: "#contact" },
   ]
@@ -36,29 +34,18 @@ export default function Navbar() {
   if (!mounted) return null
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/40">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#f5f5f3]/80 dark:bg-[#121212]/80">
+      <div className="container mx-auto px-4 md:px-8">
         <div className="flex h-16 items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex-shrink-0"
-          >
-            <a href="#home" className="text-xl font-bold tracking-tighter">
-              <span className="text-primary">Design</span>Folio
-            </a>
-          </motion.div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-black dark:bg-white rounded-full"></div>
+            <span className="font-medium">GAURANG</span>
+          </div>
 
           {/* Desktop navigation */}
-          <motion.nav
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="hidden md:flex md:space-x-8"
-          >
-            {navItems.map((item, index) => (
-              <motion.a
+          <nav className="hidden md:flex md:space-x-8">
+            {navItems.map((item) => (
+              <a
                 key={item.name}
                 href={item.href}
                 onClick={(e) => {
@@ -66,14 +53,12 @@ export default function Navbar() {
                   scrollToSection(item.href)
                 }}
                 className="text-sm font-medium hover:text-primary transition-colors relative group"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
-              </motion.a>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black dark:bg-white transition-all duration-300 group-hover:w-full" />
+              </a>
             ))}
-          </motion.nav>
+          </nav>
 
           <div className="flex items-center gap-4">
             <Button
@@ -81,6 +66,7 @@ export default function Navbar() {
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               aria-label="Toggle theme"
+              className="rounded-full"
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -89,12 +75,12 @@ export default function Navbar() {
 
             {/* Mobile menu button */}
             <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
+              variant="outline"
+              size="sm"
+              className="md:hidden rounded-full"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {mobileMenuOpen ? "Close" : "Menu"}
             </Button>
           </div>
         </div>
@@ -108,22 +94,29 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden"
+            className="md:hidden bg-[#f5f5f3] dark:bg-[#121212]"
           >
-            <div className="space-y-1 px-4 pb-3 pt-2">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    scrollToSection(item.href)
-                  }}
-                  className="block rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  {item.name}
-                </a>
-              ))}
+            <div className="container mx-auto px-4 py-8">
+              <div className="flex justify-end mb-8">
+                <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)}>
+                  <X className="h-6 w-6" />
+                </Button>
+              </div>
+              <div className="space-y-6">
+                {navItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      scrollToSection(item.href)
+                    }}
+                    className="block text-2xl font-medium hover:text-primary transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

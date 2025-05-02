@@ -42,5 +42,12 @@ export function getBrowserClient() {
 // Export the supabase client for browser usage
 export const supabase = typeof window !== "undefined" ? getBrowserClient() : createBrowserClient()
 
-// Export the server client function
-export const getServerClient = createServerClient
+// Export the server client function with error handling
+export const getServerClient = () => {
+  try {
+    return createServerClient()
+  } catch (error) {
+    console.error("Error creating Supabase server client:", error)
+    throw error
+  }
+}

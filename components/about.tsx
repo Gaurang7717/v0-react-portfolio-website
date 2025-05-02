@@ -1,86 +1,35 @@
 "use client"
 
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Download } from "lucide-react"
-
 export default function About() {
   return (
-    <div className="container mx-auto">
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-        className="text-3xl md:text-4xl font-bold text-center mb-16"
-      >
-        About <span className="text-primary">Me</span>
-      </motion.h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="relative"
-        >
-          <div className="absolute -inset-4 rounded-2xl bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 blur-xl opacity-70" />
-          <div className="relative aspect-square overflow-hidden rounded-2xl border border-border/40 bg-background/80 backdrop-blur-sm">
-            <Image
-              src="/placeholder.svg?height=600&width=600"
-              alt="Gaurang Dumaniya - UI/UX Designer"
-              width={600}
-              height={600}
-              className="object-cover w-full h-full"
-            />
+    <div className="bg-[#f5f5f3] dark:bg-[#121212] py-24">
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-8">
+              CRAFTING MEANINGFUL
+              <br />
+              BRANDS & INTUITIVE
+              <br />
+              EXPERIENCES
+            </h2>
           </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="text-2xl font-semibold mb-4">UI/UX Designer </h3>
-
-          <p className="text-muted-foreground mb-6">
-            Hello! I'm Gaurang, a passionate UI/UX designer with over 1 years of experience creating beautiful and
-            functional digital experiences. I specialize in user-centered design that balances aesthetics with
-            usability.
-          </p>
-
-          <p className="text-muted-foreground mb-6">
-            My approach combines research, strategy, and creativity to solve complex problems and deliver designs that
-            not only look great but also provide meaningful experiences for users. I believe that good design should be
-            intuitive, accessible, and delightful.
-          </p>
-
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div>
-              <h4 className="font-medium mb-2">Name:</h4>
-              <p className="text-muted-foreground">Gaurang Dumaniya</p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Email:</h4>
-              <p className="text-muted-foreground">gaurang7717@gmail.com</p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Location:</h4>
-              <p className="text-muted-foreground">Ahmedabad, India</p>
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Availability:</h4>
-              <p className="text-muted-foreground">Freelance & Full-time</p>
-            </div>
+          <div>
+            <p className="text-lg mb-6">
+              Hey, I'm Gaurang, a UI/UX and brand designer passionate about creating visually compelling and
+              user-friendly digital experiences.
+            </p>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              With a keen eye for aesthetics and a deep understanding of user behavior, I design brands and interfaces
+              that not only look great but also resonate with audiences.
+            </p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Whether it's building a brand identity from the ground up or refining a digital product for seamless
+              usability, I blend strategy, creativity, and functionality to bring ideas to life. Let's collaborate and
+              make something extraordinary.
+            </p>
           </div>
-
-          <Button className="rounded-full">
-            <Download className="mr-2 h-4 w-4" /> Download Resume
-          </Button>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

@@ -1,149 +1,78 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, Loader2 } from "lucide-react"
-import { getProjects } from "@/lib/api"
-import type { Project } from "@/types/database"
-import { useToast } from "@/components/ui/use-toast"
 
 export default function Projects() {
   const [filter, setFilter] = useState("all")
-  const [projects, setProjects] = useState<Project[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const { toast } = useToast()
 
-  const categories = [
-    { id: "all", name: "All" },
-    { id: "ui", name: "UI Design" },
-    { id: "ux", name: "UX Design" },
-    { id: "web", name: "Web Design" },
-    { id: "mobile", name: "Mobile App" },
+  const projects = [
+    {
+      id: "1",
+      title: "TOY (Toys Shop)",
+      description: "Designing an immersive Toy Shop Experience",
+      year: "2023",
+      category: "UI/UX Design",
+      image: "/placeholder.svg?height=600&width=800",
+    },
+    {
+      id: "2",
+      title: "Pet Shopping (Pet Needs)",
+      description: "Creating a seamless pet supplies platform",
+      year: "2023",
+      category: "Mobile App",
+      image: "/placeholder.svg?height=600&width=800",
+    },
+    {
+      id: "3",
+      title: "GYM (GYMFIT)",
+      description: "Designing an interactive Fitness Tech Experience",
+      year: "2022",
+      category: "Web Design",
+      image: "/placeholder.svg?height=600&width=800",
+    },
   ]
 
-  useEffect(() => {
-    async function loadProjects() {
-      try {
-        setIsLoading(true)
-        const data = await getProjects()
-        setProjects(data)
-      } catch (error) {
-        console.error("Failed to load projects:", error)
-        toast({
-          title: "Error",
-          description: "Failed to load projects. Please try again later.",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadProjects()
-  }, [toast])
-
-  const filteredProjects =
-    filter === "all" ? projects : projects.filter((project) => project.categories.includes(filter))
-
   return (
-    <div className="container mx-auto">
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-        className="text-3xl md:text-4xl font-bold text-center mb-16"
-      >
-        My <span className="text-primary">Projects</span>
-      </motion.h2>
+    <div className="bg-white dark:bg-black py-24">
+      <div className="container mx-auto px-4 md:px-8">
+        <h2 className="text-4xl md:text-5xl font-bold mb-16">PORTFOLIO</h2>
+        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mb-16">
+          Explore my recent web design creations and discover how we can transform your vision into reality.
+        </p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        viewport={{ once: true }}
-        className="flex flex-wrap justify-center gap-3 mb-12"
-      >
-        {categories.map((category) => (
-          <Button
-            key={category.id}
-            variant={filter === category.id ? "default" : "outline"}
-            onClick={() => setFilter(category.id)}
-            className="rounded-full"
-          >
-            {category.name}
-          </Button>
-        ))}
-      </motion.div>
-
-      {isLoading ? (
-        <div className="flex justify-center items-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      ) : filteredProjects.length === 0 ? (
-        <div className="text-center py-20">
-          <p className="text-muted-foreground">No projects found.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <AnimatePresence mode="wait">
-            {filteredProjects.map((project) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5 }}
-                className="group relative overflow-hidden rounded-xl border border-border/40 bg-background/80 backdrop-blur-sm hover:border-primary/40 transition-colors duration-300"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={project.image_url || "/placeholder.svg?height=600&width=800"}
-                    alt={project.title}
-                    width={800}
-                    height={600}
-                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {project.live_url && (
-                      <Button size="icon" variant="secondary" asChild>
-                        <a href={project.live_url} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="h-5 w-5" />
-                        </a>
-                      </Button>
-                    )}
-                    {project.github_url && (
-                      <Button size="icon" variant="secondary" asChild>
-                        <a href={project.github_url} target="_blank" rel="noopener noreferrer">
-                          <Github className="h-5 w-5" />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
+        <div className="space-y-24">
+          {projects.map((project) => (
+            <div key={project.id} className="group">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-lg mb-6">
+                <Image
+                  src={project.image || "/placeholder.svg"}
+                  alt={project.title}
+                  width={1200}
+                  height={675}
+                  className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <div className="flex flex-col md:flex-row md:items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">{project.description}</p>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-muted-foreground text-sm mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.categories.map((cat) => (
-                      <span
-                        key={`${project.id}-${cat}`}
-                        className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary"
-                      >
-                        {categories.find((c) => c.id === cat)?.name || cat}
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex items-center mt-4 md:mt-0">
+                  <span className="text-sm text-gray-500 mr-8">{project.year}</span>
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                  >
+                    Explore
+                  </Button>
                 </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   )
 }

@@ -1,48 +1,61 @@
 "use client"
-
-import { motion } from "framer-motion"
-import Link from "next/link"
 import { Github, Linkedin, Twitter, Instagram, Dribbble } from "lucide-react"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className="py-8 mt-20 border-t border-border/40"
-    >
-      <div className="container mx-auto">
+    <footer className="bg-[#f5f5f3] dark:bg-[#121212] py-12 border-t border-gray-200 dark:border-gray-800">
+      <div className="container mx-auto px-4 md:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <Link href="#home" className="text-xl font-bold tracking-tighter">
-              <span className="text-primary">Design</span>Folio
-            </Link>
+          <div className="mb-6 md:mb-0">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-black dark:bg-white rounded-full"></div>
+              <span className="font-medium">GAURANG</span>
+            </div>
           </div>
 
-          <div className="flex gap-4 mb-4 md:mb-0">
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Github">
+          <div className="flex gap-6 mb-6 md:mb-0">
+            <a
+              href="#"
+              className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              aria-label="Github"
+            >
               <Github className="h-5 w-5" />
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="LinkedIn">
+            <a
+              href="#"
+              className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              aria-label="LinkedIn"
+            >
               <Linkedin className="h-5 w-5" />
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
+            <a
+              href="#"
+              className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              aria-label="Twitter"
+            >
               <Twitter className="h-5 w-5" />
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">
+            <a
+              href="#"
+              className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              aria-label="Instagram"
+            >
               <Instagram className="h-5 w-5" />
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Dribbble">
+            <a
+              href="#"
+              className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              aria-label="Dribbble"
+            >
               <Dribbble className="h-5 w-5" />
             </a>
           </div>
 
-          <div className="text-sm text-muted-foreground">© {currentYear} Jane Doe. All rights reserved.</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">© {currentYear} Gaurang Dumaniya</div>
         </div>
       </div>
-    </motion.footer>
+    </footer>
   )
 }

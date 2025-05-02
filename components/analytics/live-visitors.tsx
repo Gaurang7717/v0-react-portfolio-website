@@ -8,15 +8,18 @@ import { getLiveVisitorCount } from "@/lib/analytics"
 export default function LiveVisitors() {
   const [liveCount, setLiveCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     const fetchLiveCount = async () => {
       try {
         setLoading(true)
+        setError(false)
         const count = await getLiveVisitorCount()
         setLiveCount(count)
       } catch (error) {
         console.error("Error fetching live visitor count:", error)
+        setError(true)
       } finally {
         setLoading(false)
       }
@@ -35,11 +38,13 @@ export default function LiveVisitors() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium">Live Visitors</CardTitle>
-        <Activity className="h-4 w-4 text-primary animate-pulse" />
+        <Activity className={`h-4 w-4 text-primary ${!error && "animate-pulse"}`} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{loading ? "..." : liveCount}</div>
-        <p className="text-xs text-muted-foreground">Active in the last 5 minutes</p>
+        <div className="text-2xl font-bold">{loading ? "..." : error ? "N/A" : liveCount}</div>
+        <p className="text-xs text-muted-foreground">
+          {error ? "Unable to fetch data" : "Active in the last 5 minutes"}
+        </p>
       </CardContent>
     </Card>
   )

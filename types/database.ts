@@ -29,7 +29,7 @@ export type Profile = {
   updated_at: string
 }
 
-export type Experience = {
+export interface Experience {
   id: string
   title: string
   company: string
@@ -37,9 +37,25 @@ export type Experience = {
   period: string
   description: string[]
   skills: string[]
+  order: number
   created_at: string
   updated_at: string
+  is_current: boolean
+  start_date: string | null
+  end_date: string | null
+}
+
+export interface ExperienceFormData {
+  id?: string
+  title: string
+  company: string
+  location: string
+  description: string[]
+  skills: string[]
   order: number
+  is_current: boolean
+  start_date: string
+  end_date: string | null
 }
 
 export type Skill = {
@@ -47,6 +63,47 @@ export type Skill = {
   name: string
   icon: string
   description: string
+  order: number
+  created_at: string
+  updated_at: string
+}
+
+export type Education = {
+  id: string
+  degree: string
+  institution: string
+  location: string
+  year: string
+  description: string | null
+  order: number
+  created_at: string
+  updated_at: string
+}
+
+export type Certification = {
+  id: string
+  title: string
+  issuer: string
+  date: string
+  description: string | null
+  order: number
+  created_at: string
+  updated_at: string
+}
+
+export type Language = {
+  id: string
+  name: string
+  proficiency: string
+  order: number
+  created_at: string
+  updated_at: string
+}
+
+export type Hobby = {
+  id: string
+  name: string
+  icon: string
   order: number
   created_at: string
   updated_at: string

@@ -1,18 +1,21 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
 import ProtectedRoute from "@/components/protected-route"
 import { Toaster } from "@/components/ui/toaster"
-import { LayoutDashboard, FolderKanban, Mail, LogOut, Moon, Sun, Menu, X, User, Briefcase, Palette } from "lucide-react"
+import { LayoutDashboard, FolderKanban, Mail, User, Briefcase, Palette } from "lucide-react"
 import { useTheme } from "next-themes"
+import type { ReactNode } from "react"
+import { BarChart } from "lucide-react"
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+interface AdminLayoutProps {
+  children: ReactNode
+}
+
+export default function AdminLayout({ children }: AdminLayoutProps) {
   const [mounted, setMounted] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { theme, setTheme } = useTheme()
@@ -45,11 +48,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Profile", href: "/admin/profile", icon: User },
   ]
 
+  const navItems = [
+    { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/experiences", label: "Experiences", icon: Briefcase },
+    { href: "/admin/messages", label: "Messages", icon: Mail },
+    { href: "/admin/analytics", label: "Analytics", icon: BarChart },
+    { href: "/admin/profile", label: "Profile", icon: User },
+  ]
+
   return (
     <ProtectedRoute>
-      <div className="flex h-screen bg-background">
+      {/* <div className="flex h-screen bg-background"> */}
+      <div className="flex min-h-screen">
         {/* Sidebar for desktop */}
-        <div className="hidden md:flex md:w-64 md:flex-col">
+        {/* <div className="hidden md:flex md:w-64 md:flex-col">
           <div className="flex flex-col flex-grow border-r border-border/40 pt-5 pb-4 bg-background/80 backdrop-blur-sm overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
               <Link href="/admin/dashboard" className="text-xl font-bold tracking-tighter">
@@ -99,10 +111,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+        <aside className="w-64 bg-muted/40 border-r">
+          <div className="p-6">
+            <h2 className="text-xl font-bold">Admin Panel</h2>
+          </div>
+          <nav className="px-3 py-2">
+            <ul className="space-y-1">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-muted"
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
 
         {/* Mobile menu */}
-        <div className="md:hidden fixed inset-0 z-40 flex">
+        {/* <div className="md:hidden fixed inset-0 z-40 flex">
           <div
             className={`fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity ${
               mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -173,10 +205,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Mobile top bar */}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center h-16 bg-background/80 backdrop-blur-sm border-b border-border/40 px-4">
+        {/* <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center h-16 bg-background/80 backdrop-blur-sm border-b border-border/40 px-4">
           <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(true)} className="md:hidden">
             <Menu className="h-6 w-6" />
           </Button>
@@ -186,16 +218,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </Link>
           </div>
           <div className="w-6"></div> {/* Spacer for balance */}
-        </div>
+        {/* </div> */}
 
         {/* Main content */}
-        <div className="flex flex-col flex-1 overflow-hidden">
+        {/* <div className="flex flex-col flex-1 overflow-hidden">
           <main className="flex-1 relative overflow-y-auto focus:outline-none pt-16 md:pt-0">
             <div className="py-6">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">{children}</div>
             </div>
           </main>
-        </div>
+        </div> */}
+        <main className="flex-1">{children}</main>
       </div>
       <Toaster />
     </ProtectedRoute>
