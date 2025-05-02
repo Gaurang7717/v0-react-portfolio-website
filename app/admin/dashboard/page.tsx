@@ -15,6 +15,7 @@ import DeviceBreakdown from "@/components/analytics/device-breakdown"
 import PageViews from "@/components/analytics/page-views"
 import LiveVisitors from "@/components/analytics/live-visitors"
 import VisitorStats from "@/components/analytics/visitor-stats"
+import { getServerClient } from "@/lib/supabase"
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
@@ -28,7 +29,18 @@ export default function Dashboard() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsSummary | null>(null)
   const [timeRange, setTimeRange] = useState<TimeRange>("month")
   const [isSeeding, setIsSeeding] = useState(false)
+  const [serverClientAvailable, setServerClientAvailable] = useState(false)
   const { toast } = useToast()
+
+  // Check if server client is available
+  useEffect(() => {
+    const checkServerClient = () => {
+      const serverClient = getServerClient()
+      setServerClientAvailable(serverClient !== null)
+    }
+
+    checkServerClient()
+  }, [])
 
   // Update the loadStats function to handle errors better
   async function loadStats() {
@@ -110,7 +122,17 @@ export default function Dashboard() {
     loadStats()
   }, [toast, timeRange])
 
+  // Update the handleSeedData function to handle errors better
   const handleSeedData = async () => {
+    if (!serverClientAvailable) {
+      toast({
+        title: "Error",
+        description: "Cannot seed analytics data: Server environment variables are not available.",
+        variant: "destructive",
+      })
+      return
+    }
+
     try {
       setIsSeeding(true)
       const success = await seedAnalyticsData(30) // Seed 30 days of data
@@ -125,7 +147,11 @@ export default function Dashboard() {
         const analytics = await getAnalyticsSummary(timeRange)
         setAnalyticsData(analytics)
       } else {
-        throw new Error("Failed to seed analytics data")
+        toast({
+          title: "Error",
+          description: "Failed to seed analytics data. Please try again later.",
+          variant: "destructive",
+        })
       }
     } catch (error) {
       console.error("Error seeding analytics data:", error)
@@ -181,7 +207,7 @@ export default function Dashboard() {
             </SelectContent>
           </Select>
 
-          <Button onClick={handleSeedData} disabled={isSeeding}>
+          <Button onClick={handleSeedData} disabled={isSeeding || !serverClientAvailable}>
             {isSeeding ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Seeding Data...
@@ -192,6 +218,16 @@ export default function Dashboard() {
           </Button>
         </div>
       </div>
+
+      {!serverClientAvailable && (
+        <div className="mb-6 p-4 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded-md text-yellow-800 dark:text-yellow-200">
+          <p className="font-medium">Analytics using mock data</p>
+          <p className="text-sm mt-1">
+            Server environment variables are not available. Analytics data shown is simulated. To use real analytics,
+            please set up the required environment variables.
+          </p>
+        </div>
+      )}
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Website Analytics</h2>

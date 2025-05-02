@@ -20,6 +20,8 @@ export default function LiveVisitors() {
       } catch (error) {
         console.error("Error fetching live visitor count:", error)
         setError(true)
+        // Set a default value when there's an error
+        setLiveCount(0)
       } finally {
         setLoading(false)
       }
@@ -41,10 +43,8 @@ export default function LiveVisitors() {
         <Activity className={`h-4 w-4 text-primary ${!error && "animate-pulse"}`} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{loading ? "..." : error ? "N/A" : liveCount}</div>
-        <p className="text-xs text-muted-foreground">
-          {error ? "Unable to fetch data" : "Active in the last 5 minutes"}
-        </p>
+        <div className="text-2xl font-bold">{loading ? "..." : liveCount}</div>
+        <p className="text-xs text-muted-foreground">Active in the last 5 minutes</p>
       </CardContent>
     </Card>
   )

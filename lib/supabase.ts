@@ -12,18 +12,6 @@ const createBrowserClient = () => {
   return createClient(supabaseUrl, supabaseAnonKey)
 }
 
-// For server-side usage
-const createServerClient = () => {
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error("Missing Supabase environment variables for server client")
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey)
-}
-
 // Create a singleton instance for the browser
 let browserClient: ReturnType<typeof createClient> | undefined
 
@@ -42,12 +30,23 @@ export function getBrowserClient() {
 // Export the supabase client for browser usage
 export const supabase = typeof window !== "undefined" ? getBrowserClient() : createBrowserClient()
 
-// Export the server client function with error handling
+// Export the server client function with better error handling
 export const getServerClient = () => {
+  // Check if required environment variables exist before attempting to create client
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+
+  // If either variable is missing, return null instead of throwing an error
+  if (!supabaseUrl || !supabaseServiceKey) {
+    console.warn("Missing Supabase environment variables for server client - returning null")
+    return null
+  }
+
+  // Only create client if we have the required variables
   try {
-    return createServerClient()
+    return createClient(supabaseUrl, supabaseServiceKey)
   } catch (error) {
     console.error("Error creating Supabase server client:", error)
-    throw error
+    return null
   }
 }

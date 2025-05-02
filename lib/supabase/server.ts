@@ -1,3 +1,4 @@
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import { cookies } from "next/headers"
 
 export function createClient() {
@@ -9,7 +10,7 @@ export function createClient() {
   }
 
   const cookieStore = cookies()
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       get(name: string) {
         return cookieStore.get(name)?.value
