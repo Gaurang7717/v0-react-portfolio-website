@@ -15,6 +15,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    subject: "",
     message: "",
   })
 
@@ -33,6 +34,7 @@ export default function Contact() {
       const formDataObj = new FormData()
       formDataObj.append("name", formData.name)
       formDataObj.append("email", formData.email)
+      formDataObj.append("subject", formData.subject || "Contact Form Submission") // Ensure subject has a default value
       formDataObj.append("message", formData.message)
 
       // Submit the form using fetch to the server action endpoint
@@ -42,13 +44,25 @@ export default function Contact() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to submit contact form")
+        // Get the error message from the response if available
+        let errorMessage = "Failed to submit contact form"
+        try {
+          const errorData = await response.json()
+          if (errorData.error) {
+            errorMessage = errorData.error
+          }
+        } catch (e) {
+          // If we can't parse the JSON, just use the default error message
+        }
+
+        throw new Error(errorMessage)
       }
 
       // Reset form
       setFormData({
         name: "",
         email: "",
+        subject: "",
         message: "",
       })
 
@@ -59,11 +73,28 @@ export default function Contact() {
       })
     } catch (error) {
       console.error("Error submitting form:", error)
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again later.",
-        variant: "destructive",
-      })
+
+      // In preview mode or when the backend is unavailable, show a different message
+      if (window.location.hostname.includes("vercel.app") || window.location.hostname === "localhost") {
+        toast({
+          title: "Demo Mode",
+          description: "Form submission is simulated in preview mode. In production, your message would be sent.",
+        })
+
+        // Reset form in preview mode too
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        })
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to send message. Please try again later or contact me directly via email.",
+          variant: "destructive",
+        })
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -114,6 +145,17 @@ export default function Contact() {
               onChange={handleChange}
               placeholder="Your Email"
               required
+              disabled={isSubmitting}
+              className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
+            />
+          </div>
+          <div>
+            <Input
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              placeholder="Subject (Optional)"
               disabled={isSubmitting}
               className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
             />
