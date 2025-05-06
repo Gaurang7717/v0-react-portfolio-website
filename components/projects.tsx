@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
 
 export default function Projects() {
   const [filter, setFilter] = useState("all")
@@ -37,14 +38,28 @@ export default function Projects() {
   return (
     <div className="bg-white dark:bg-black py-24">
       <div className="container mx-auto px-4 md:px-8">
-        <h2 className="text-4xl md:text-5xl font-bold mb-16">PORTFOLIO</h2>
-        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mb-16">
-          Explore my recent web design creations and discover how we can transform your vision into reality.
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-16">PORTFOLIO</h2>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mb-16">
+            Explore my recent web design creations and discover how we can transform your vision into reality.
+          </p>
+        </motion.div>
 
         <div className="space-y-24">
-          {projects.map((project) => (
-            <div key={project.id} className="group">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="group"
+            >
               <div className="relative aspect-[16/9] overflow-hidden rounded-lg mb-6">
                 <Image
                   src={project.image || "/placeholder.svg"}
@@ -69,7 +84,7 @@ export default function Projects() {
                   </Button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

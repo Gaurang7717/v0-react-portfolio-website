@@ -1,11 +1,18 @@
 "use client"
 
+import { motion } from "framer-motion"
+
 export default function About() {
   return (
     <div className="bg-[#f5f5f3] dark:bg-[#121212] py-24">
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
             <h2 className="text-4xl md:text-5xl font-bold mb-8">
               CRAFTING MEANINGFUL
               <br />
@@ -13,8 +20,14 @@ export default function About() {
               <br />
               EXPERIENCES
             </h2>
-          </div>
-          <div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
             <p className="text-lg mb-6">
               Hey, I'm Gaurang, a UI/UX and brand designer passionate about creating visually compelling and
               user-friendly digital experiences.
@@ -28,7 +41,7 @@ export default function About() {
               usability, I blend strategy, creativity, and functionality to bring ideas to life. Let's collaborate and
               make something extraordinary.
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

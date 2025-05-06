@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false)
@@ -32,7 +33,12 @@ export default function Hero() {
 
       {/* Hero Content */}
       <div className="container mx-auto flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 px-4 md:px-8 py-12">
-        <div className="flex flex-col justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col justify-center"
+        >
           <h2 className="text-lg mb-2">Hey, I'm Gaurang,</h2>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4">
             A UI/UX
@@ -48,9 +54,14 @@ export default function Hero() {
           <Button className="rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 w-fit flex items-center gap-2 px-6">
             CONTACT ME <ArrowRight className="h-4 w-4" />
           </Button>
-        </div>
+        </motion.div>
 
-        <div className="flex items-center justify-center lg:justify-end">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex items-center justify-center lg:justify-end"
+        >
           <div className="relative">
             <div className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
               <Image
@@ -63,7 +74,7 @@ export default function Hero() {
               />
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Stats */}
