@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
 
 export default function Projects() {
   const [filter, setFilter] = useState("all")
@@ -35,32 +34,38 @@ export default function Projects() {
     },
   ]
 
-  return (
-    <div className="bg-white dark:bg-black py-24">
-      <div className="container mx-auto px-4 md:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-16">PORTFOLIO</h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mb-16">
-            Explore my recent web design creations and discover how we can transform your vision into reality.
-          </p>
-        </motion.div>
+  const filteredProjects = filter === "all" ? projects : projects.filter((project) => project.category === filter)
 
-        <div className="space-y-24">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group"
+  return (
+    <section id="projects" className="bg-white dark:bg-black py-16 md:py-24">
+      <div className="container mx-auto px-4 md:px-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          My <span className="text-primary">Portfolio</span>
+        </h2>
+
+        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-center mb-16">
+          Explore my recent web design creations and discover how we can transform your vision into reality.
+        </p>
+
+        {/* Filter buttons */}
+        <div className="flex flex-wrap justify-center gap-2 mb-12">
+          {["all", "UI/UX Design", "Mobile App", "Web Design"].map((category) => (
+            <Button
+              key={category}
+              variant={filter === category ? "default" : "outline"}
+              size="sm"
+              onClick={() => setFilter(category)}
+              className="rounded-full text-xs"
             >
-              <div className="relative aspect-[16/9] overflow-hidden rounded-lg mb-6">
+              {category === "all" ? "All Projects" : category}
+            </Button>
+          ))}
+        </div>
+
+        <div className="space-y-12 md:space-y-24">
+          {filteredProjects.map((project, index) => (
+            <div key={project.id} className="group">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-lg mb-4 md:mb-6">
                 <Image
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
@@ -71,23 +76,26 @@ export default function Projects() {
               </div>
               <div className="flex flex-col md:flex-row md:items-center justify-between">
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">{project.description}</p>
+                  <h3 className="text-xl md:text-2xl font-bold mb-2">{project.title}</h3>
+                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4 md:mb-0">
+                    {project.description}
+                  </p>
                 </div>
-                <div className="flex items-center mt-4 md:mt-0">
-                  <span className="text-sm text-gray-500 mr-8">{project.year}</span>
+                <div className="flex items-center">
+                  <span className="text-xs md:text-sm text-gray-500 mr-4 md:mr-8">{project.year}</span>
                   <Button
                     variant="outline"
+                    size="sm"
                     className="rounded-full border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
                   >
                     Explore
                   </Button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   )
 }

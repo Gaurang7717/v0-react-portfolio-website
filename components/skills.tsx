@@ -1,7 +1,8 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 import { getSkills } from "@/lib/api"
 import type { Skill } from "@/types/database"
 import * as LucideIcons from "lucide-react"
@@ -131,47 +132,36 @@ export default function Skills() {
   }, [])
 
   const renderIcon = (iconName: string) => {
-    const Icon = LucideIcons[iconName]
-    return Icon ? <Icon className="h-10 w-10" /> : <Palette className="h-10 w-10" />
+    // Check if the icon exists in LucideIcons
+    const Icon = (LucideIcons as Record<string, React.ComponentType<any>>)[iconName]
+    return Icon ? <Icon className="h-8 w-8 md:h-10 md:w-10" /> : <Palette className="h-8 w-8 md:h-10 md:w-10" />
   }
 
   return (
-    <div className="container mx-auto">
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-        className="text-3xl md:text-4xl font-bold text-center mb-16"
-      >
-        My <span className="text-primary">Skills</span>
-      </motion.h2>
+    <section id="skills" className="bg-white dark:bg-black py-16 md:py-24">
+      <div className="container mx-auto px-4 md:px-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          My <span className="text-primary">Skills</span>
+        </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        {skills.map((skill, index) => (
-          <motion.div
-            key={skill.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            viewport={{ once: true }}
-            whileHover={{
-              y: -10,
-              transition: { type: "spring", stiffness: 400, damping: 10 },
-            }}
-            className="group relative overflow-hidden rounded-xl border border-border/40 bg-background/80 backdrop-blur-sm p-6 text-center hover:border-primary/40 transition-colors duration-300"
-          >
-            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/10 group-hover:via-secondary/10 group-hover:to-primary/10 blur opacity-0 group-hover:opacity-100 transition-all duration-500" />
-            <div className="relative flex flex-col items-center">
-              <div className="mb-4 text-primary transition-transform duration-300 group-hover:scale-110">
-                {renderIcon(skill.icon)}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+          {skills.map((skill, index) => (
+            <div
+              key={skill.id}
+              className="group relative overflow-hidden rounded-xl border border-border/40 bg-background/80 backdrop-blur-sm p-4 md:p-6 text-center hover:border-primary/40 transition-colors duration-300 hover:-translate-y-1"
+            >
+              <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/10 group-hover:via-secondary/10 group-hover:to-primary/10 blur opacity-0 group-hover:opacity-100 transition-all duration-500" />
+              <div className="relative flex flex-col items-center">
+                <div className="mb-3 md:mb-4 text-primary transition-transform duration-300 group-hover:scale-110">
+                  {renderIcon(skill.icon)}
+                </div>
+                <h3 className="text-base md:text-lg font-semibold mb-1 md:mb-2">{skill.name}</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">{skill.description}</p>
               </div>
-              <h3 className="text-lg font-semibold mb-2">{skill.name}</h3>
-              <p className="text-sm text-muted-foreground">{skill.description}</p>
             </div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

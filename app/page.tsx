@@ -1,49 +1,29 @@
-"use client"
-
-import { useEffect, useState } from "react"
+import Navbar from "@/components/navbar"
 import Hero from "@/components/hero"
 import About from "@/components/about"
 import Projects from "@/components/projects"
+import Skills from "@/components/skills"
+import Experience from "@/components/experience"
 import Contact from "@/components/contact"
 import Footer from "@/components/footer"
-import Navbar from "@/components/navbar"
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false)
-
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return null
-
   return (
-    <div className="min-h-screen bg-[#f5f5f3] dark:bg-[#121212] transition-colors duration-500">
+    <>
       <Navbar />
-
-      <main>
-        <section id="home">
-          <Hero />
-        </section>
-
-        <section id="about">
-          <About />
-        </section>
-
-        <section id="projects">
-          <Projects />
-        </section>
-
-        <section id="contact" className="bg-[#f5f5f3] dark:bg-[#121212] py-24">
+      <main className="min-h-screen">
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Experience />
+        <section id="contact" className="bg-[#f5f5f3] dark:bg-[#121212] py-16 md:py-24">
           <div className="container mx-auto px-4 md:px-8">
-            <h2 className="text-4xl md:text-5xl font-bold mb-16">GET IN TOUCH</h2>
             <Contact />
           </div>
         </section>
+        <Footer />
       </main>
-
-      <Footer />
-    </div>
+    </>
   )
 }

@@ -1,12 +1,11 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Mail, Phone, MapPin } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 
 export default function Contact() {
@@ -101,87 +100,108 @@ export default function Contact() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-      <div>
-        <p className="text-lg mb-8 max-w-md">
-          Have a project in mind or want to discuss a potential collaboration? I'd love to hear from you.
-        </p>
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-sm font-bold uppercase mb-2">Email</h3>
-            <p className="text-gray-600 dark:text-gray-300">gaurang7717@gmail.com</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold uppercase mb-2">Phone</h3>
-            <p className="text-gray-600 dark:text-gray-300">+91 90819 65909</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold uppercase mb-2">Location</h3>
-            <p className="text-gray-600 dark:text-gray-300">Ahmedabad, India</p>
+    <>
+      <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+        Contact <span className="text-primary">Me</span>
+      </h2>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
+        <div>
+          <p className="text-base md:text-lg mb-8 max-w-md">
+            Have a project in mind or want to discuss a potential collaboration? I'd love to hear from you.
+          </p>
+          <div className="space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Mail className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold uppercase mb-1">Email</h3>
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">gaurang7717@gmail.com</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Phone className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold uppercase mb-1">Phone</h3>
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">+91 90819 65909</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold uppercase mb-1">Location</h3>
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">Ahmedabad, India</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Your Name"
-              required
+        <div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <Input
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Your Name"
+                required
+                disabled={isSubmitting}
+                className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
+              />
+            </div>
+            <div>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Your Email"
+                required
+                disabled={isSubmitting}
+                className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
+              />
+            </div>
+            <div>
+              <Input
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="Subject (Optional)"
+                disabled={isSubmitting}
+                className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
+              />
+            </div>
+            <div>
+              <Textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Your Message"
+                rows={5}
+                required
+                disabled={isSubmitting}
+                className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white resize-none"
+              />
+            </div>
+            <Button
+              type="submit"
               disabled={isSubmitting}
-              className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
-            />
-          </div>
-          <div>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Your Email"
-              required
-              disabled={isSubmitting}
-              className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
-            />
-          </div>
-          <div>
-            <Input
-              id="subject"
-              name="subject"
-              value={formData.subject}
-              onChange={handleChange}
-              placeholder="Subject (Optional)"
-              disabled={isSubmitting}
-              className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white"
-            />
-          </div>
-          <div>
-            <Textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder="Your Message"
-              rows={5}
-              required
-              disabled={isSubmitting}
-              className="border-0 border-b border-gray-300 dark:border-gray-700 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-black dark:focus-visible:border-white resize-none"
-            />
-          </div>
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 w-fit flex items-center gap-2 px-6"
-          >
-            {isSubmitting ? "Sending..." : "Send Message"} <ArrowRight className="h-4 w-4" />
-          </Button>
-        </form>
+              className="rounded-full bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 w-fit flex items-center gap-2 px-6"
+            >
+              {isSubmitting ? "Sending..." : "Send Message"} <ArrowRight className="h-4 w-4" />
+            </Button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
